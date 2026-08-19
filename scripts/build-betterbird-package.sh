@@ -91,11 +91,54 @@ git -C "$patches_dir" checkout --detach FETCH_HEAD
 curl --fail --location --retry 3 --output "$source_archive" "$THUNDERBIRD_SOURCE_URL"
 echo "$THUNDERBIRD_SOURCE_SHA256  $source_archive" | sha256sum --check --strict
 
-install -m 755 "$patches_dir/build/build-one-off.sh" "$work_dir/build-one-off.sh"
-(
-    cd "$work_dir"
-    ./build-one-off.sh "$BETTERBIRD_PATCH_SERIES" apply
-)
+mkdir -p "$source_dir"
+tar -xf "$source_archive" --strip-components=1 -C "$source_dir"
+
+apply_patch_series() {
+    local source_root=$1
+    local series_file=$2
+    local line
+    local patch_name
+    local patch_file
+    local token
+    local patch_url
+
+    while IFS= read -r line || [[ -n $line ]]; do
+        patch_name=${line%%#*}
+        patch_name=${patch_name%"${patch_name##*[![:space:]]}"}
+        patch_name=${patch_name#"${patch_name%%[![:space:]]*}"}
+        [[ -n $patch_name ]] || continue
+
+        patch_file=$patches_dir/$BETTERBIRD_PATCH_SERIES/$patch_name
+        if [[ ! -f $patch_file ]]; then
+            patch_url=
+            for token in ${line#*#}; do
+                if [[ $token == https://* || $token == http://* ]]; then
+                    patch_url=$token
+                    break
+                fi
+            done
+            patch_url=${patch_url/\/rev\//\/raw-rev\/}
+            if [[ -z $patch_url ]]; then
+                echo "Patch not found: $patch_name" >&2
+                exit 1
+            fi
+
+            mkdir -p "$(dirname "$patch_file")"
+            curl --fail --location --retry 3 --output "$patch_file" "$patch_url"
+        fi
+
+        printf 'Applying %s\n' "$patch_name"
+        git -C "$source_root" apply --allow-empty --whitespace=nowarn "$patch_file"
+    done <"$series_file"
+}
+
+apply_patch_series \
+    "$source_dir" \
+    "$patches_dir/$BETTERBIRD_PATCH_SERIES/series-moz"
+apply_patch_series \
+    "$source_dir/comm" \
+    "$patches_dir/$BETTERBIRD_PATCH_SERIES/series"
 
 sed \
     -e '/^ac_add_options --enable-tests$/d' \
