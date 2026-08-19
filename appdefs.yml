@@ -22,6 +22,12 @@ app:
     category: "Tools:"
   documentation:
   changelog:
+    - version: 26.08.4
+      date: 2026-08-19
+      changes:
+        - 'Added native linux/amd64 and linux/arm64 Betterbird package builds.'
+        - 'Passed source-built packages to native image jobs through verified GitHub Actions artifacts.'
+        - 'Published release images as a combined multi-platform manifest.'
     - version: 26.08.3
       date: 2026-08-19
       changes:

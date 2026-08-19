@@ -11,9 +11,8 @@
 > **Fork notice:** This project is based on
 > [jlesage/docker-thunderbird](https://github.com/jlesage/docker-thunderbird).
 > It replaces Thunderbird with Betterbird, switches the base image from Alpine
-> Linux to Debian 13 for glibc compatibility, verifies the pinned official
-> Betterbird archive during the build, and currently supports `linux/amd64`
-> only because Betterbird does not publish Linux archives for ARM.
+> Linux to Debian 13, and source-builds pinned Betterbird packages for native
+> `linux/amd64` and `linux/arm64` image builds.
 
 This project provides a lightweight and secure Docker container for
 [Betterbird](https://www.betterbird.eu).
@@ -37,11 +36,22 @@ shell, desktop notifications, and more.
 Betterbird is a fine-tuned soft fork of Mozilla Thunderbird with additional
 features and bug fixes.
 
+## Supported Architectures
+
+The image supports `linux/amd64` and `linux/arm64`. Betterbird packages for
+both architectures are built from the same pinned Thunderbird source and
+Betterbird patch revision on native GitHub Actions runners.
+
+These packages are unofficial builds produced by this project. Their archives,
+SHA-256 checksums, and build provenance are passed between workflow jobs as
+GitHub Actions artifacts.
+
 ---
 
 ## Table of Contents
 
    * [Quick Start](#quick-start)
+   * [Build Pipeline](#build-pipeline)
    * [Usage](#usage)
       * [Environment Variables](#environment-variables)
          * [Deployment Considerations](#deployment-considerations)
@@ -81,8 +91,8 @@ features and bug fixes.
 > should be adjusted to suit your needs.
 
 > [!NOTE]
-> The official Betterbird Linux archive is currently available only for x86-64,
-> so this image supports `linux/amd64` only.
+> Docker automatically selects the native `linux/amd64` or `linux/arm64` image
+> for the host platform.
 
 Launch the Betterbird docker container with the following command:
 
@@ -99,6 +109,23 @@ Where:
   - `/docker/appdata/betterbird`: Stores the application's configuration, state, logs, and any files requiring persistency.
 
 Access the Betterbird GUI by browsing to `http://your-host-ip:5800`.
+
+## Build Pipeline
+
+The GitHub Actions workflow builds the application and container in two native
+architecture matrices:
+
+1. `ubuntu-24.04` and `ubuntu-24.04-arm` compile Betterbird from the pinned
+   inputs in `build/betterbird.env`.
+2. Each package job uploads its tarball, SHA-256 checksum, and provenance file
+   as a workflow artifact.
+3. Native image jobs download the matching artifact and provide it to the
+   Docker build context. The Dockerfile does not download application binaries.
+4. Release builds push each platform by digest and merge both digests into the
+   final multi-platform manifest.
+
+Package artifacts are temporary workflow data. Published container images do
+not depend on an artifact remaining available after the workflow completes.
 
 ## Usage
 

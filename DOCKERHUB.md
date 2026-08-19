@@ -38,8 +38,8 @@ features and bug fixes.
     should be adjusted to suit your needs.
 
 **NOTE**:
-    The official Betterbird Linux archive is currently available only for
-    x86-64, so this image supports `linux/amd64` only.
+    This image supports `linux/amd64` and `linux/arm64`. Docker automatically
+    selects the native image for the host platform.
 
 Launch the Betterbird docker container with the following command:
 ```shell

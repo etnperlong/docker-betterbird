@@ -1,0 +1,7 @@
+.build/
+dist/
+build/*
+!build/betterbird/
+!build/betterbird/betterbird.tar.xz
+!build/betterbird/betterbird.tar.xz.sha256
+!build/betterbird/provenance.json
