@@ -1,7 +1,7 @@
 ---
 
 #
-# Definitions for Thunderbird docker container.
+# Definitions for Betterbird docker container.
 #
 # This file is used as data source to generate README.md and unRAID template files
 # from Jinja2 templates.
@@ -9,19 +9,25 @@
 
 app:
   id: 26
-  name: thunderbird
-  friendly_name: Thunderbird
+  name: betterbird
+  friendly_name: Betterbird
   gui_type: x11
-  base_os: alpine
+  base_os: debian
   project:
     description: |-
-      Thunderbird is a free email application that's easy to set up and customize.
-    url: https://www.thunderbird.net
+      Betterbird is a fine-tuned soft fork of Mozilla Thunderbird with additional features and bug fixes.
+    url: https://www.betterbird.eu
   unraid:
-    #support_url: https://forums.unraid.net/topic/XXXXX-support-thunderbird/
+    #support_url: https://forums.unraid.net/topic/XXXXX-support-betterbird/
     category: "Tools:"
   documentation:
   changelog:
+    - version: 26.08.3
+      date: 2026-08-19
+      changes:
+        - 'Replaced Thunderbird with Betterbird version 153.1.0esr-bb7.'
+        - 'Switched the base image from Alpine Linux to Debian 13 for compatibility with the official Betterbird Linux archive.'
+        - 'Limited builds to linux/amd64 because Betterbird only publishes an x86-64 Linux archive.'
     - version: 26.08.2
       date: 2026-08-17
       changes:

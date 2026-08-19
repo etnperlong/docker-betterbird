@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Ask a question, discuss
-    url: https://github.com/jlesage/docker-thunderbird/discussions
+    url: https://github.com/etnperlong/docker-betterbird/discussions
     about: Get help using this Docker container.
   - name: Documentation
-    url: https://github.com/jlesage/docker-thunderbird#readme
+    url: https://github.com/etnperlong/docker-betterbird#readme
     about: Documentation about this Docker container.

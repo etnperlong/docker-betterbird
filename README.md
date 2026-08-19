@@ -1,13 +1,22 @@
-# Docker container for Thunderbird
-[![Release](https://img.shields.io/github/release/jlesage/docker-thunderbird.svg?logo=github&style=for-the-badge)](https://github.com/jlesage/docker-thunderbird/releases/latest)
-[![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/thunderbird/latest?logo=docker&style=for-the-badge)](https://hub.docker.com/r/jlesage/thunderbird/tags)
-[![Docker Pulls](https://img.shields.io/docker/pulls/jlesage/thunderbird?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/jlesage/thunderbird)
-[![Docker Stars](https://img.shields.io/docker/stars/jlesage/thunderbird?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/jlesage/thunderbird)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/jlesage/docker-thunderbird/build-image.yml?logo=github&branch=master&style=for-the-badge)](https://github.com/jlesage/docker-thunderbird/actions/workflows/build-image.yml)
+# Docker container for Betterbird
+[![Release](https://img.shields.io/github/release/etnperlong/docker-betterbird.svg?logo=github&style=for-the-badge)](https://github.com/etnperlong/docker-betterbird/releases/latest)
+[![Docker Image Size](https://img.shields.io/docker/image-size/etnperlong/betterbird/latest?logo=docker&style=for-the-badge)](https://hub.docker.com/r/etnperlong/betterbird/tags)
+[![Docker Pulls](https://img.shields.io/docker/pulls/etnperlong/betterbird?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/etnperlong/betterbird)
+[![Docker Stars](https://img.shields.io/docker/stars/etnperlong/betterbird?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/etnperlong/betterbird)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/etnperlong/docker-betterbird/build-image.yml?logo=github&branch=master&style=for-the-badge)](https://github.com/etnperlong/docker-betterbird/actions/workflows/build-image.yml)
+[![Source](https://img.shields.io/badge/Source-GitHub-blue?logo=github&style=for-the-badge)](https://github.com/etnperlong/docker-betterbird)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=for-the-badge)](https://paypal.me/JocelynLeSage)
 
+> [!IMPORTANT]
+> **Fork notice:** This project is based on
+> [jlesage/docker-thunderbird](https://github.com/jlesage/docker-thunderbird).
+> It replaces Thunderbird with Betterbird, switches the base image from Alpine
+> Linux to Debian 13 for glibc compatibility, verifies the pinned official
+> Betterbird archive during the build, and currently supports `linux/amd64`
+> only because Betterbird does not publish Linux archives for ARM.
+
 This project provides a lightweight and secure Docker container for
-[Thunderbird](https://www.thunderbird.net).
+[Betterbird](https://www.betterbird.eu).
 
 Access the application's full graphical interface directly from any modern web
 browser - no downloads, installs, or setup required on the client side - or
@@ -19,13 +28,14 @@ shell, desktop notifications, and more.
 
 > [!NOTE]
 > This Docker container is entirely unofficial and not made by the creators of
-> Thunderbird.
+> Betterbird.
 
 ---
 
-[![Thunderbird logo](https://images.weserv.nl/?url=raw.githubusercontent.com/jlesage/docker-templates/master/jlesage/images/thunderbird-icon.png&w=110)](https://www.thunderbird.net)[![Thunderbird](https://images.placeholders.dev/?width=352&height=110&fontFamily=monospace&fontWeight=400&fontSize=52&text=Thunderbird&bgColor=rgba(0,0,0,0.0)&textColor=rgba(121,121,121,1))](https://www.thunderbird.net)
+[![Betterbird logo](https://images.weserv.nl/?url=www.betterbird.eu/media/img/betterbird-256.png&w=110)](https://www.betterbird.eu)[![Betterbird](https://images.placeholders.dev/?width=352&height=110&fontFamily=monospace&fontWeight=400&fontSize=52&text=Betterbird&bgColor=rgba(0,0,0,0.0)&textColor=rgba(121,121,121,1))](https://www.betterbird.eu)
 
-Thunderbird is a free email application that's easy to set up and customize.
+Betterbird is a fine-tuned soft fork of Mozilla Thunderbird with additional
+features and bug fixes.
 
 ---
 
@@ -70,31 +80,35 @@ Thunderbird is a free email application that's easy to set up and customize.
 > The Docker command provided in this quick start is an example, and parameters
 > should be adjusted to suit your needs.
 
-Launch the Thunderbird docker container with the following command:
+> [!NOTE]
+> The official Betterbird Linux archive is currently available only for x86-64,
+> so this image supports `linux/amd64` only.
+
+Launch the Betterbird docker container with the following command:
 
 ```shell
 docker run -d \
-    --name=thunderbird \
+    --name=betterbird \
     -p 5800:5800 \
-    -v /docker/appdata/thunderbird:/config:rw \
-    jlesage/thunderbird
+    -v /docker/appdata/betterbird:/config:rw \
+    etnperlong/betterbird
 ```
 
 Where:
 
-  - `/docker/appdata/thunderbird`: Stores the application's configuration, state, logs, and any files requiring persistency.
+  - `/docker/appdata/betterbird`: Stores the application's configuration, state, logs, and any files requiring persistency.
 
-Access the Thunderbird GUI by browsing to `http://your-host-ip:5800`.
+Access the Betterbird GUI by browsing to `http://your-host-ip:5800`.
 
 ## Usage
 
 ```shell
 docker run [-d] \
-    --name=thunderbird \
+    --name=betterbird \
     [-e <VARIABLE_NAME>=<VALUE>]... \
     [-v <HOST_DIR>:<CONTAINER_DIR>[:PERMISSIONS]]... \
     [-p <HOST_PORT>:<CONTAINER_PORT>]... \
-    jlesage/thunderbird
+    etnperlong/betterbird
 ```
 
 | Parameter | Description |
@@ -217,12 +231,12 @@ follow these steps:
 
   1. Stop the container (if it is running):
 ```shell
-docker stop thunderbird
+docker stop betterbird
 ```
 
   2. Remove the container:
 ```shell
-docker rm thunderbird
+docker rm betterbird
 ```
 
   3. Recreate and start the container using the `docker run` command, adjusting
@@ -244,12 +258,12 @@ included in this example.
 
 ```yaml
 services:
-  thunderbird:
-    image: jlesage/thunderbird
+  betterbird:
+    image: etnperlong/betterbird
     ports:
       - "5800:5800"
     volumes:
-      - "/docker/appdata/thunderbird:/config:rw"
+      - "/docker/appdata/betterbird:/config:rw"
 ```
 
 ## Docker Image Versioning and Tags
@@ -269,8 +283,8 @@ where:
 View all available tags on [Docker Hub] or check the [Releases] page for version
 details.
 
-[Releases]: https://github.com/jlesage/docker-thunderbird/releases
-[Docker Hub]: https://hub.docker.com/r/jlesage/thunderbird/tags
+[Releases]: https://github.com/etnperlong/docker-betterbird/releases
+[Docker Hub]: https://hub.docker.com/r/etnperlong/betterbird/tags
 
 ## Docker Image Update
 
@@ -289,17 +303,17 @@ To manually update the Docker image, follow these steps:
 
   1. Fetch the latest image:
 ```shell
-docker pull jlesage/thunderbird
+docker pull etnperlong/betterbird
 ```
 
   2. Stop the container:
 ```shell
-docker stop thunderbird
+docker stop betterbird
 ```
 
   3. Remove the container:
 ```shell
-docker rm thunderbird
+docker rm betterbird
 ```
 
   4. Recreate and start the container using the `docker run` command, with the
@@ -313,11 +327,11 @@ For Synology NAS users, follow these steps to update a container image:
 
   1.  Open the *Docker* application.
   2.  Click *Registry* in the left pane.
-  3.  In the search bar, type the name of the container (`jlesage/thunderbird`).
+  3.  In the search bar, type the name of the container (`etnperlong/betterbird`).
   4.  Select the image, click *Download*, and choose the `latest` tag.
   5.  Wait for the download to complete. A notification will appear once done.
   6.  Click *Container* in the left pane.
-  7.  Select your Thunderbird container.
+  7.  Select your Betterbird container.
   8.  Stop it by clicking *Action* -> *Stop*.
   9.  Clear the container by clicking *Action* -> *Reset* (or *Action* ->
       *Clear* if you don't have the latest *Docker* application). This removes
@@ -562,7 +576,7 @@ In this scenario, each hostname is routed to a different application or
 container.
 
 For example, if the reverse proxy server runs on the same machine as this
-container, it would proxy all HTTP requests for `thunderbird.domain.tld` to
+container, it would proxy all HTTP requests for `betterbird.domain.tld` to
 the container at `127.0.0.1:5800`.
 
 Here are the relevant configuration elements to add to the NGINX configuration:
@@ -573,7 +587,7 @@ map $http_upgrade $connection_upgrade {
 	''      close;
 }
 
-upstream docker-thunderbird {
+upstream docker-betterbird {
 	# If the reverse proxy server is not running on the same machine as the
 	# Docker container, use the IP of the Docker host here.
 	# Make sure to adjust the port according to how port 5800 of the
@@ -584,10 +598,10 @@ upstream docker-thunderbird {
 server {
 	[...]
 
-	server_name thunderbird.domain.tld;
+	server_name betterbird.domain.tld;
 
 	location / {
-		proxy_pass http://docker-thunderbird;
+		proxy_pass http://docker-betterbird;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection $connection_upgrade;
@@ -613,7 +627,7 @@ map $http_upgrade $connection_upgrade {
 	''      close;
 }
 
-upstream docker-thunderbird {
+upstream docker-betterbird {
 	# If the reverse proxy server is not running on the same machine as the
 	# Docker container, use the IP of the Docker host here.
 	# Make sure to adjust the port according to how port 5800 of the
@@ -624,9 +638,9 @@ upstream docker-thunderbird {
 server {
 	[...]
 
-	location = /thunderbird {return 301 $scheme://$http_host/thunderbird/;}
-	location /thunderbird/ {
-		proxy_pass http://docker-thunderbird/;
+	location = /betterbird {return 301 $scheme://$http_host/betterbird/;}
+	location /betterbird/ {
+		proxy_pass http://docker-betterbird/;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection $connection_upgrade;
@@ -667,7 +681,7 @@ window to open it.
 | **Quality** slider | Adjusts image quality. Moving the slider left reduces bandwidth at the cost of visual quality. |
 | **Compression** slider | Adjusts compression level applied to screen updates. Moving the slider right increases compression, which lowers bandwidth but raises CPU usage. |
 | **Logging** dropdown | Sets the verbosity level of the web interface logs shown in the browser console. |
-| **Application version** label | Displays the version of Thunderbird integrated into Docker image. |
+| **Application version** label | Displays the version of Betterbird integrated into Docker image. |
 | **Docker image** version label | Displays the version of the Docker image currently running. |
 
 ## Host Clipboard Sync
@@ -760,7 +774,7 @@ over an allowed one.
 ## Web Notifications
 
 The container includes support for notifications sent through the web browser.
-Any desktop notification generated by Thunderbird is forwarded to the
+Any desktop notification generated by Betterbird is forwarded to the
 browser, which then displays it as a native notification on the user's system.
 
 Enable the web notification service by setting `WEB_NOTIFICATION` to `1`. See
@@ -816,6 +830,6 @@ argument to the `docker run` command.
 ## Support or Contact
 
 Having troubles with the container or have questions? Please
-[create a new issue](https://github.com/jlesage/docker-thunderbird/issues).
+[create a new issue](https://github.com/etnperlong/docker-betterbird/issues).
 
 For other Dockerized applications, visit https://jlesage.github.io/docker-apps.

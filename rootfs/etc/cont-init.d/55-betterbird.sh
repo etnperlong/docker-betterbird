@@ -5,7 +5,7 @@ set -u # Treat unset variables as an error.
 
 # Make sure some directories are created.
 #mkdir -p /config/downloads
-mkdir -p /config/log/thunderbird
+mkdir -p /config/log/betterbird
 mkdir -p /config/profile
 
 # Generate machine id.
@@ -15,7 +15,7 @@ mkdir -p /config/profile
 #fi
 
 # Initialize log files.
-for LOG_FILE in /config/log/thunderbird/output.log /config/log/thunderbird/error.log
+for LOG_FILE in /config/log/betterbird/output.log /config/log/betterbird/error.log
 do
     touch "$LOG_FILE"
 
