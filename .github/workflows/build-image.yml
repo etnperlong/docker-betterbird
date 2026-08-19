@@ -160,10 +160,12 @@ jobs:
             | sudo tee /etc/apt/sources.list.d/llvm.list >/dev/null
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends \
+            "libclang-$LLVM_VERSION-dev" \
             "clang-$LLVM_VERSION" \
             "lld-$LLVM_VERSION" \
             "llvm-$LLVM_VERSION"
           echo "/usr/lib/llvm-$LLVM_VERSION/bin" >>"$GITHUB_PATH"
+          echo "LIBCLANG_PATH=/usr/lib/llvm-$LLVM_VERSION/lib" >>"$GITHUB_ENV"
 
       - name: Install build dependencies
         shell: bash

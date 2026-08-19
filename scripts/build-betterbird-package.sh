@@ -186,6 +186,13 @@ if [[ $clang_version != *"version $LLVM_VERSION."* ]]; then
     exit 1
 fi
 
+libclang_path=${LIBCLANG_PATH:-/usr/lib/llvm-$LLVM_VERSION/lib}
+if ! compgen -G "$libclang_path/libclang.so*" >/dev/null; then
+    echo "libclang shared library not found under: $libclang_path" >&2
+    exit 1
+fi
+export LIBCLANG_PATH=$libclang_path
+
 export CC=clang
 export CXX=clang++
 
