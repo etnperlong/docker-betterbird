@@ -149,16 +149,18 @@ jobs:
 
       - name: Setup LLVM toolchain
         shell: bash
+        timeout-minutes: 10
         run: |
           set -euo pipefail
           source build/betterbird.env
-          sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends ca-certificates curl gnupg
+          apt_opts=(-o Acquire::Retries=3 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20)
+          sudo apt-get "${apt_opts[@]}" update
+          sudo apt-get "${apt_opts[@]}" install --yes --no-install-recommends ca-certificates curl gnupg
           curl --fail --silent --show-error https://apt.llvm.org/llvm-snapshot.gpg.key \
             | sudo gpg --dearmor --yes --output /usr/share/keyrings/apt.llvm.org.gpg
           echo "deb [signed-by=/usr/share/keyrings/apt.llvm.org.gpg] https://apt.llvm.org/noble/ llvm-toolchain-noble-$LLVM_VERSION main" \
             | sudo tee /etc/apt/sources.list.d/llvm.list >/dev/null
-          sudo apt-get update
+          sudo apt-get "${apt_opts[@]}" update
           sudo apt-get install --yes --no-install-recommends \
             "libclang-$LLVM_VERSION-dev" \
             "clang-$LLVM_VERSION" \
@@ -169,9 +171,11 @@ jobs:
 
       - name: Install build dependencies
         shell: bash
+        timeout-minutes: 10
         run: |
           set -euo pipefail
-          sudo apt-get update
+          apt_opts=(-o Acquire::Retries=3 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20)
+          sudo apt-get "${apt_opts[@]}" update
           sudo apt-get install --yes --no-install-recommends \
             autoconf2.13 \
             build-essential \

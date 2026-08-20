@@ -202,7 +202,7 @@ export CXX=clang++
     ./mach package
 )
 
-mapfile -t upstream_packages < <(find "$source_dir/obj-$target_triple/dist" -maxdepth 1 -type f -name '*.tar.bz2' -print)
+mapfile -t upstream_packages < <(find "$source_dir/obj-$target_triple/dist" -maxdepth 1 -type f -name '*.tar.xz' -print)
 if [[ ${#upstream_packages[@]} -ne 1 ]]; then
     echo "Expected one Betterbird package, found ${#upstream_packages[@]}" >&2
     printf '%s\n' "${upstream_packages[@]}" >&2
@@ -211,7 +211,7 @@ fi
 
 rm -rf "$stage_dir"
 mkdir -p "$stage_dir"
-tar -xjf "${upstream_packages[0]}" -C "$stage_dir"
+tar -xJf "${upstream_packages[0]}" -C "$stage_dir"
 
 binary_path=$stage_dir/betterbird/betterbird-bin
 if [[ ! -x $binary_path ]]; then
