@@ -125,6 +125,19 @@ architecture matrices:
 4. Release builds push each platform by digest and merge both digests into the
    final multi-platform manifest.
 
+The current package is Betterbird `153.6.0esr-bb12`, built from Mozilla's
+[Thunderbird 153.6.0esr build1 candidate source archive](https://archive.mozilla.org/pub/thunderbird/candidates/153.6.0esr-candidates/build1/source/thunderbird-153.6.0esr.source.tar.xz)
+(SHA-256 `5fabe3918c8d34b2c4892745a16e83b3a94314ff2831aee03c0d5f7b5c632ba6`)
+with the [stable Betterbird 153.6.0esr-bb12 patch revision](https://github.com/Betterbird/thunderbird-patches/tree/153.6.0esr-bb12),
+pinned to commit `b3bf122cf8f2deea3b89979a42e0809ce4a53b13`. See the
+[Betterbird downloads](https://www.betterbird.eu/downloads/) and
+[release notes](https://www.betterbird.eu/releasenotes/) for upstream release
+information.
+
+The project's `SOURCE_DATE_EPOCH` is set from that stable patch commit's
+timestamp (`2026-10-27T09:53:32Z`) for reproducible builds; it is not the
+official binary build date.
+
 Package artifacts are temporary workflow data. Published container images do
 not depend on an artifact remaining available after the workflow completes.
 
