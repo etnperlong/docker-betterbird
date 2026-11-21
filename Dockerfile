@@ -4,8 +4,8 @@
 # https://github.com/etnperlong/docker-betterbird
 #
 
-# Pull base image.
-FROM jlesage/baseimage-gui:debian-13-v4.14.0
+# Pull base image. Base images have no `latest` tag; pin a versioned tag.
+FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie-f7632021-ls153
 
 # Docker image version is provided via build arg.
 ARG DOCKER_IMAGE_VERSION=unknown
@@ -15,12 +15,12 @@ ARG BETTERBIRD_VERSION=unknown
 ARG BETTERBIRD_PATCH_REVISION=unknown
 ARG TARGETARCH
 
-# Define working directory.
-WORKDIR /tmp
-
 # Install Betterbird runtime dependencies.
 RUN \
-    add-pkg \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        # Icons used by folder/file selection window (when saving as).
+        adwaita-icon-theme \
         libasound2t64 \
         libatk1.0-0t64 \
         libcairo-gobject2 \
@@ -44,14 +44,14 @@ RUN \
         libxfixes3 \
         libxi6 \
         libxrandr2 \
-        libxrender1 \
-        locales && \
-    localedef -i en_US -f UTF-8 en_US.UTF-8
+        libxrender1 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install the native Betterbird package produced by the package build jobs.
 COPY build/betterbird/ /tmp/betterbird/
 RUN \
-    add-pkg --virtual build-dependencies file xz-utils && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends file xz-utils && \
     cd /tmp/betterbird && \
     sha256sum -c betterbird.tar.xz.sha256 && \
     tar -xJf betterbird.tar.xz -C /opt && \
@@ -63,31 +63,32 @@ RUN \
     esac && \
     file /opt/betterbird/betterbird-bin | grep -F "$expected_architecture" && \
     install -Dm644 provenance.json /usr/share/doc/betterbird/build-provenance.json && \
-    install_app_icon.sh /opt/betterbird/chrome/icons/default/default256.png && \
-    cd /tmp && \
-    rm -rf /tmp/betterbird && \
-    del-pkg build-dependencies
-
-# Install extra packages.
-RUN \
-    add-pkg \
-        # Icons used by folder/file selection window (when saving as).
-        adwaita-icon-theme \
-        # A font is needed.
-        fonts-dejavu
+    # Favicon and PWA icon of the web client.
+    install -Dm644 /opt/betterbird/chrome/icons/default/default256.png /usr/share/selkies/www/icon.png && \
+    cd / && \
+    apt-get autoclean && \
+    rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
 # Add files.
 COPY rootfs/ /
 
-# Set internal environment variables.
-RUN \
-    set-cont-env APP_NAME "Betterbird" && \
-    set-cont-env APP_VERSION "$BETTERBIRD_VERSION" && \
-    set-cont-env BETTERBIRD_PATCH_REVISION "$BETTERBIRD_PATCH_REVISION" && \
-    set-cont-env DOCKER_IMAGE_VERSION "$DOCKER_IMAGE_VERSION" && \
-    true
+# Single-app defaults: Wayland session, restart Betterbird when it exits, keep
+# the UID/GID of volumes created by the previous jlesage-based image, and turn
+# off base features a mail client does not use (inner Docker, gamepads, Steam
+# shim, virtual webcam, unauthenticated sharing links).
+ENV TITLE=Betterbird \
+    PIXELFLUX_WAYLAND=true \
+    RESTART_APP=true \
+    PUID=1000 \
+    PGID=1000 \
+    START_DOCKER=false \
+    NO_GAMEPAD=true \
+    NO_STEAM=true \
+    NO_WEBCAM=true \
+    SELKIES_ENABLE_SHARING=false
 
-# Define mountable directories.
+# Ports and volumes.
+EXPOSE 3000 3001
 VOLUME ["/config"]
 
 # Metadata.
@@ -96,5 +97,6 @@ LABEL \
       org.label-schema.description="Docker container for Betterbird" \
       org.label-schema.version="${DOCKER_IMAGE_VERSION:-unknown}" \
       org.label-schema.vcs-url="https://github.com/etnperlong/docker-betterbird" \
+      io.github.etnperlong.betterbird.version="${BETTERBIRD_VERSION}" \
       io.github.etnperlong.betterbird.patch-revision="${BETTERBIRD_PATCH_REVISION}" \
       org.label-schema.schema-version="1.0"

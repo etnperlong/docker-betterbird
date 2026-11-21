@@ -22,6 +22,15 @@ app:
     category: "Tools:"
   documentation:
   changelog:
+    - version: 26.11.2
+      date: 2026-11-21
+      changes:
+        - 'Switched the base image to LinuxServer.io Selkies (baseimage-selkies:debiantrixie-f7632021-ls153).'
+        - 'Served the web interface over HTTPS on port 3001, keeping port 3000 as the plain HTTP reverse proxy target.'
+        - 'Removed the VNC server, the web authentication login page, the secure connection toggle, the web terminal, web notifications, and the jlesage-specific environment variables.'
+        - 'Replaced USER_ID and GROUP_ID with PUID and PGID, still defaulting to 1000 so existing /config volumes keep their ownership.'
+        - 'Added a required --shm-size=1gb shared memory setting for the container.'
+        - 'Added audio streaming, browser-side input method support, binary clipboard sharing, file transfers, and CJK fonts through Selkies.'
     - version: 26.11.1
       date: 2026-11-04
       changes:

@@ -5,64 +5,56 @@
 [![Docker Stars](https://img.shields.io/docker/stars/etnperlong/betterbird?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/etnperlong/betterbird)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/etnperlong/docker-betterbird/build-image.yml?logo=github&branch=master&style=for-the-badge)](https://github.com/etnperlong/docker-betterbird/actions/workflows/build-image.yml)
 [![Source](https://img.shields.io/badge/Source-GitHub-blue?logo=github&style=for-the-badge)](https://github.com/etnperlong/docker-betterbird)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=for-the-badge)](https://paypal.me/JocelynLeSage)
 
-This project provides a lightweight and secure Docker container for
-[Betterbird](https://www.betterbird.eu).
+This project provides a lightweight Docker container for
+[Betterbird](https://www.betterbird.eu), based on the
+[LinuxServer.io Selkies base image](https://github.com/linuxserver/docker-baseimage-selkies).
 
-Access the application's full graphical interface directly from any modern web
-browser - no downloads, installs, or setup required on the client side - or
-connect with any VNC client.
-
-The web interface also offers audio playback, seamless clipboard sharing, an
-integrated file manager and terminal for accessing the container's files and
-shell, desktop notifications, and more.
+The full graphical application is available from any modern web browser, with
+audio playback, seamless clipboard sharing, file upload/download, and PWA
+installation provided by the Selkies web client.
 
 > [!NOTE]
 > This Docker container is entirely unofficial and not made by the creators of
 > Betterbird.
 
----
-
-[![Betterbird logo](https://images.weserv.nl/?url=www.betterbird.eu/media/img/betterbird-256.png&w=110)](https://www.betterbird.eu)[![Betterbird](https://images.placeholders.dev/?width=352&height=110&fontFamily=monospace&fontWeight=400&fontSize=52&text=Betterbird&bgColor=rgba(0,0,0,0.0)&textColor=rgba(121,121,121,1))](https://www.betterbird.eu)
-
-Betterbird is a fine-tuned soft fork of Mozilla Thunderbird with additional
-features and bug fixes.
-
----
-
 ## Quick Start
 
-**NOTE**:
-    The Docker command provided in this quick start is an example, and parameters
-    should be adjusted to suit your needs.
+`--shm-size=1gb` is required.
 
-**NOTE**:
-    This image supports `linux/amd64` and `linux/arm64`. Docker automatically
-    selects the native image for the host platform.
-
-Launch the Betterbird docker container with the following command:
 ```shell
 docker run -d \
     --name=betterbird \
-    -p 5800:5800 \
+    --shm-size=1gb \
+    -p 3001:3001 \
     -v /docker/appdata/betterbird:/config:rw \
     etnperlong/betterbird
 ```
 
-Where:
+Browse to `https://your-host-ip:3001/`. The container serves HTTPS with a
+self-signed certificate generated on first start; replace
+`/config/ssl/cert.pem` and `/config/ssl/cert.key` to use your own.
 
-  - `/docker/appdata/betterbird`: Stores the application's configuration, state, logs, and any files requiring persistency.
+| Port | Description |
+|------|-------------|
+| 3001 | HTTPS web interface. |
+| 3000 | Plain HTTP for a reverse proxy only; not usable directly in a browser. |
 
-Access the Betterbird GUI by browsing to `http://your-host-ip:5800`.
+| Volume | Description |
+|--------|-------------|
+| `/config` | Profile, settings, logs, and persistent files. |
+
+Common environment variables: `PUID`/`PGID` (default `1000`), `TZ`,
+`LC_ALL`, `PASSWORD` (no authentication at all when unset), `CUSTOM_USER`
+(default `abc`), `SUBFOLDER`, `GTK_THEME=Adwaita:dark` for dark mode.
 
 ## Documentation
 
-Full documentation is available at https://github.com/etnperlong/docker-betterbird.
+Full documentation, including environment variables, reverse proxy examples,
+GPU acceleration, logs, and migration notes, is available at
+https://github.com/etnperlong/docker-betterbird#readme.
 
 ## Support or Contact
 
 Having troubles with the container or have questions? Please
 [create a new issue](https://github.com/etnperlong/docker-betterbird/issues).
-
-For other Dockerized applications, visit https://jlesage.github.io/docker-apps.
